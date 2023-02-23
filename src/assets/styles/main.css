@@ -32,8 +32,11 @@ input:focus {
 }
 
 .output {
-  min-width: 600px;
-  border: 1px solid grey;
+  min-width: 320px;
+  height: 320px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow-y: scroll;
 }
 
 .row {
@@ -50,15 +53,19 @@ input:focus {
 }
 
 main {
-  width: 420px;
-  margin: 25px auto;
-  background: #f2f2f2;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
 .dashboard {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  flex-wrap: wrap;
+  margin: 25px auto;
+  max-width: 655px;
 }
 
 .buttons {
@@ -89,6 +96,10 @@ button {
   background: #cb3b48;
 }
 
+.copy-btn {
+  background: #438ead;
+}
+
 .dm-dots-btn, .dm-line-btn {
   display: grid;
   justify-content: center;
@@ -105,7 +116,7 @@ button {
 .dm-dots-btn.active, .dm-line-btn.active {
   fill: #fff;
   color: #fff;
-  background: purple;
+  background: #73739b;
 }
 
 .dm-dots-btn.active , .dm-line-btn.active svg {
