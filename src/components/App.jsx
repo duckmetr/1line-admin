@@ -16,7 +16,7 @@ function App() {
 
   function addDot(x, y) {
     if (drawMode !== 'dots') return
-    setDots((prev) => [...prev, { y, x, radius: 10, color: '#7232d2' }])
+    setDots((prev) => [...prev, { y, x, radius: 10, color: '#7232d2a4' }])
   }
 
   function removeDot(x, y) {
@@ -37,18 +37,23 @@ function App() {
   }
 
   function generate() {
-    const search = dots.flat().filter((item) => item.color === '#7232d2')
-    const level = search.map(({ y, x }) => ({ dot: [x, y], join: [] }))
-    const temp = level.map((item) => {
+    const level = dots.flat().map(({ y, x }) => ({ dot: [x, y], join: [] }))
+    const uniquePoints = [...new Set(points.join('-').split('-'))].map((item) => {
+      const [x, y] = item.split(',')
+      return [+x, +y]
+    })
+
+    // console.log('unique points:', uniquePoints)
+    // console.log('dots flat:', dots.flat())
+
+    level.map((item) => {
       const [x, y] = item.dot
       points.map((point, index) => {
         if (point[0] === x && point[1] === y) {
           const subIndexes = [index - 1, index + 1]
             .filter((num) => num >= 0 && num < points.length)
             .map((num) =>
-              num >= level.length
-                ? points.findIndex(([x, y]) => x === points[num][0] && y === points[num][1])
-                : num
+              uniquePoints.findIndex(([x, y]) => x === points[num][0] && y === points[num][1])
             )
 
           item.id ??= index
@@ -62,7 +67,7 @@ function App() {
       id: Number(inputRef.current.value) ?? 0,
       points: level.sort((a, b) => a.id - b.id).map(({ dot, join }) => ({ dot, join }))
     }
-    // console.log('level:', level)
+
     // console.log('points:', points)
     // console.log('output:', out)
     setOutput(out)
@@ -72,7 +77,7 @@ function App() {
     <>
       <header>
         <label>
-          Level: <input ref={inputRef} type="text" defaultValue="0" />
+          Level: <input ref={inputRef} type="number" defaultValue="0" />
         </label>
       </header>
       <main>
@@ -91,6 +96,7 @@ function App() {
                         color={color}
                         fill={color}
                         onMouseDown={() => addDot(x, y)}
+                        onTouchStart={() => addDot(x, y)}
                       />
                     )
                   })
@@ -114,6 +120,9 @@ function App() {
                       onMouseDown={
                         drawMode === 'dots' ? () => removeDot(x, y) : () => drawLine(x, y)
                       }
+                      onTouchStart={
+                        drawMode === 'dots' ? () => removeDot(x, y) : () => drawLine(x, y)
+                      }
                     />
                   )
                 })}
@@ -127,7 +136,6 @@ function App() {
           </div>
         </div>
       </main>
-
       <div className="dashboard">
         <div className="buttons">
           <button className="generate-btn" onClick={generate}>
